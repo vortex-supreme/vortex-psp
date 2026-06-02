@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VORTEX PSP | SUPREME EDITION</title>
+
+<!-- Fuentes de Google optimizadas con preconnect para evitar retrasos y fallos -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+/* ===== VARIABLES Y TEMAS NEÓN BRUTALES ===== */
+:root {
+    --primary: #00bfff;
+    --secondary: #00ffff;
+    --bg-dark: #0f0f0f;
+    --bg-card: #1a1a1a;
+    --bg-nav: rgba(20, 20, 20, 0.9);
+    --heart: #ff4500;
+    --text-color: #ffffff;
+    --shadow-color: rgba(0, 191, 255, 0.35);
+}
+
+/* Tema Inferno Red */
+.theme-inferno {
+    --primary: #ff3333;
+    --secondary: #ff6600;
+    --bg-dark: #0a0505;
+    --bg-card: #1a0d0d;
+    --bg-nav: rgba(26, 13, 13, 0.9);
+    --heart: #ffffff;
+    --text-color: #ffffff;
+    --shadow-color: rgba(255, 51, 51, 0.4);
+}
+
+/* Tema Amethyst Purple */
+.theme-amethyst {
+    --primary: #9933ff;
+    --secondary: #00ffff;
+    --bg-dark: #0b0514;
+    --bg-card: #160d25;
+    --bg-nav: rgba(22, 13, 37, 0.9);
+    --heart: #ff007f;
+    --text-color: #ffffff;
+    --shadow-color: rgba(153, 51, 255, 0.4);
+}
+
+body {
+    margin: 0;
+    background: var(--bg-dark);
+    color: var(--text-color);
+    /* Cambiado a sans-serif de respaldo para evitar la letra cursiva */
+    font-family: 'Press Start 2P', sans-serif;
+    text-align: center;
+    scroll-behavior: smooth;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* ===== BARRA DE NAVEGACIÓN ===== */
+nav {
+    background: var(--bg-nav);
+    padding: 18px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+nav .nav-links a {
+    color: var(--primary);
+    margin: 0 10px;
+    text-decoration: none;
+    font-size: 10px;
+    transition: 0.3s;
+}
+nav .nav-links a:hover {
+    color: var(--secondary);
+    text-shadow: 0 0 5px var(--secondary);
+}
+
+.server-status {
+    font-size: 8px;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+/* SELECTOR DE TEMAS INTERACTIVOS */
+.theme-selector select {
+    background: var(--bg-card);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
+    font-size: 8px;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+}
+
+/* ===== ENCABEZADO ===== */
+h1 {
+    color: var(--primary);
+    margin-top: 40px;
+    font-size: 24px;
+    text-shadow: 0 0 10px var(--shadow-color);
+}
+
+.warning-box {
+    color: var(--primary);
+    font-size: 9px;
+    margin: 15px auto;
+    padding: 10px;
+    border: 1px dashed var(--primary);
+    display: inline-block;
+    border-radius: 6px;
+}
+
+/* ===== BUSCADOR COMPUESTO CON BOTONES ===== */
+.search-wrapper {
+    display: flex;
+    max-width: 600px;
+    width: 92%;
+    margin: 25px auto 10px auto;
+    gap: 8px;
+    position: relative;
+}
+.search-container {
+    position: relative;
+    flex-grow: 1;
+}
+#search {
+    padding: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--bg-card);
+    border: 2px solid var(--primary);
+    color: var(--text-color);
+    border-radius: 8px;
+    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
+    font-size: 10px;
+    outline: none;
+}
+
+/* BOTÓN DE MICRÓFONO 🎙️ */
+.btn-voice {
+    background: var(--bg-card);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    font-size: 14px;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-voice.recording {
+    background: #ff3333;
+    color: white;
+    border-color: #ff3333;
+    animation: pulseMic 1s infinite alternate;
+}
+@keyframes pulseMic {
+    0% { box-shadow: 0 0 5px #ff3333; }
+    100% { box-shadow: 0 0 20px #ff3333; }
+}
+
+/* BOTÓN ALEATORIO 🎲 */
+.btn-random {
+    background: var(--bg-card);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+    width: 50px;
+}
+.btn-random:hover, .btn-voice:hover:not(.recording) {
+    background: var(--primary);
+    color: var(--bg-dark);
+}
+
+/* SUGERENCIAS */
+#suggestions {
+    position: absolute;
+    background: var(--bg-card);
+    border: 1px solid var(--primary);
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    left: 0; top: 105%;
+    z-index: 999;
+    border-radius: 8px;
+    text-align: left;
+    box-sizing: border-box;
+}
+#suggestions div {
+    padding: 12px;
+    cursor: pointer;
+    font-size: 9px;
+    color: var(--primary);
+}
+#suggestions div:hover {
+    background: rgba(0, 191, 255, 0.2);
+}
+
+/* FILTROS Y CATEGORÍAS */
+.game-counter {
+    font-size: 8px;
+    color: var(--primary);
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+.categories {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+.tab {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 8px 12px;
+    font-size: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
+}
+.tab.active, .tab:hover {
+    background: var(--primary);
+    color: var(--bg-dark);
+}
+.tab-fav { border-color: var(--heart); color: var(--heart); }
+.tab-fav.active, .tab-fav:hover { background: var(--heart); color: white; }
+
+/* ===== TARJETAS 3D ===== */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    perspective: 1000px;
+}
+
+.game {
+    background: var(--bg-card);
+    border: 1px solid rgba(0, 191, 255, 0.2);
+    padding: 14px;
+    border-radius: 14px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 360px;
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s, border-color 0.3s;
+    transform-style: preserve-3d;
+}
+
+.game:hover {
+    transform: perspective(1000px) scale(1.04) rotateX(6deg) rotateY(-3deg);
+    box-shadow: -5px 12px 30px var(--shadow-color);
+    border-color: var(--primary);
+}
+
+.game.highlighted {
+    animation: flashHighlight 1.5s ease-in-out 2;
+    border: 2px solid var(--secondary);
+}
+@keyframes flashHighlight {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); box-shadow: 0 0 30px var(--primary); }
+}
+
+.game-meta, .game img, .game h3, .game-actions {
+    transform: translateZ(25px);
+}
+
+.game-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7px;
+    margin-bottom: 8px;
+}
+.badge-spec {
+    background: rgba(0,0,0,0.3);
+    padding: 4px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--primary);
+    color: var(--text-color);
+}
+
+.game img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.game h3 {
+    font-size: 10px;
+    margin: 12px 0;
+    color: var(--primary);
+    line-height: 1.4;
+    height: 28px;
+    overflow: hidden;
+}
+
+/* ACCIONES DE TARJETA */
+.game-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+.game-actions button {
+    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
+    cursor: pointer;
+}
+.btn-fav {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--primary);
+    color: var(--text-color);
+    width: 45px;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-size: 12px;
+}
+.btn-fav.is-fav {
+    color: var(--heart);
+    border-color: var(--heart);
+    background: rgba(255, 69, 0, 0.1);
+}
+.btn-info {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    width: 45px;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-size: 12px;
+}
+.btn-download {
+    flex-grow: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: var(--bg-dark);
+    font-weight: bold;
+    font-size: 10px;
+}
+
+/* PANEL CONFIGURACIÓN PPSSPP */
+.config-overlay {
+    background: var(--bg-card);
+    border: 2px solid var(--primary);
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 14px;
+    box-sizing: border-box;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 10;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.config-overlay.open { transform: translateY(0); }
+.config-overlay h4 { font-size: 9px; color: var(--primary); margin: 0 0 10px 0; }
+.config-overlay p { font-size: 7px; line-height: 1.6; text-align: left; color: var(--text-color); margin: 5px 0; }
+.btn-close-config {
+    background: var(--heart);
+    color: white;
+    font-size: 7px;
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: none;
+}
+
+/* BOTÓN DE CORREO DIRECTO */
+.btn-email {
+    display: inline-block;
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 14px 20px;
+    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
+    font-size: 9px;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-top: 15px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.btn-email:hover {
+    background: var(--primary);
+    color: var(--bg-dark);
+    box-shadow: 0 0 15px var(--primary);
+}
+
+/* VOLVER ARRIBA */
+#btn-top {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 45px; height: 45px;
+    background: var(--bg-card);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#no-results { color: var(--heart); font-size: 10px; grid-column: 1 / -1; margin: 20px 0; display: none; }
+
+/* ===== SECCIONES ===== */
+section { margin-top: 80px; padding: 40px 20px; background: var(--bg-card); border-top: 1px solid var(--primary); }
+section h2 { color: var(--primary); font-size: 12px; margin-bottom: 25px; }
+section p { font-size: 10px; line-height: 1.8; }
+
+.top-container { max-width: 800px; margin: 0 auto; }
+.top-item {
+    display: flex; align-items: center; background: var(--bg-dark);
+    margin: 10px 0; padding: 15px; border-radius: 8px;
+    border-left: 4px solid var(--primary); font-size: 9px; text-align: left;
+}
+.top-rank { font-size: 11px; margin-right: 15px; min-width: 30px; }
+
+@media(max-width:600px){
+    h1 { font-size: 14px; }
+    nav { padding: 10px; justify-content: center; }
+    .container { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+    .game { height: auto; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+    <div>
+        <span class="logo" style="color: var(--text-color);">⚡ VORTEX</span>
+        <span class="server-status">SERVER ONLINE 🟢</span>
+    </div>
+    <div class="nav-links">
+        <a href="#juegos">Juegos</a>
+        <a href="#top">Top 3</a>
+        <a href="#soporte">Soporte</a>
+        <a href="#donar">Donar</a>
+    </div>
+    <div class="theme-selector">
+        <select id="themeSelect" onchange="cambiarTema(this.value)">
+            <option value="default">🌐 VORTEX CYAN</option>
+            <option value="theme-inferno">🔥 INFERNO RED</option>
+            <option value="theme-amethyst">🔮 AMETHYST PURPLE</option>
+        </select>
+    </div>
+</nav>
+
+<h1>🎮 VORTEX PSP 🎮</h1>
+
+<div class="warning-box">
+    ⚠️ Usa ZArchiver para extraer archivos .zip o .7z
+</div>
+
+<!-- BUSCADOR -->
+<div class="search-wrapper">
+    <button class="btn-voice" id="mic-btn" onclick="activarVoz()" title="Buscar por voz">🎙️</button>
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Buscar juego o tag..." onkeyup="filtrarContenido();" autocomplete="off">
+        <div id="suggestions"></div>
+    </div>
+    <button class="btn-random" onclick="seleccionarJuegoAleatorio();">🎲</button>
+</div>
+
+<div class="game-counter" id="game-counter">Cargando catálogo...</div>
+
+<!-- CATEGORÍAS -->
+<div class="categories">
+    <button class="tab active" onclick="filtrarCategoria('todos', this)">TODOS</button>
+    <button class="tab" onclick="filtrarCategoria('accion', this)">💥 ACCIÓN</button>
+    <button class="tab" onclick="filtrarCategoria('carreras', this)">🏎️ CARRERAS</button>
+    <button class="tab" onclick="filtrarCategoria('mundo-abierto', this)">🏙️ MUNDO</button>
+    <button class="tab" onclick="filtrarCategoria('multiplayer', this)">👥 MULTI</button>
+    <button class="tab tab-fav" onclick="filtrarCategoria('favoritos', this)">♥ FAVS</button>
+</div>
+
+<!-- CONTENEDOR JUEGOS -->
+<div id="juegos" class="container">
+    <div id="no-results">❌ No se encontraron juegos.</div>
+</div>
+
+<!-- TOP JUEGOS -->
+<section id="top">
+    <h2>⭐ TOP 3 MÁS DESCARGADOS</h2>
+    <div class="top-container" id="top-list"></div>
+</section>
+
+<!-- SOPORTE Y REPORTE -->
+<section id="soporte">
+    <h2>📩 SOPORTE Y QUEJAS</h2>
+    <p>¿Encontraste algún enlace caído o tienes alguna sugerencia para el catálogo?</p>
+    <a href="mailto:jca5145546@gmail.com?subject=[REPORTE%20VORTEX%20PSP]&body=Escribe%20aquí%20tu%20queja%20o%20el%20nombre%20del%20juego%20con%20falla:" class="btn-email">📧 REPORTAR UNA QUEJA</a>
+</section>
+
+<!-- DONAR (COSTOS DEL SERVIDOR) -->
+<section id="donar">
+    <h2>🚀 MANTÉN EL SERVIDOR VIVO</h2>
+    <p>VORTEX PSP se mantiene libre de acortadores molestos y publicidad invasiva gracias a la comunidad.</p>
+    <p style="margin-top: 10px; font-size: 9px; line-height: 1.6; color: #aaaaaa;">
+        Cada aporte va destinado directamente a cubrir los costos del servidor, almacenamiento en la nube de alta velocidad y el mantenimiento técnico para garantizar que ningún enlace se caiga. ¡Ayúdanos a mantener el catálogo online 24/7!
+    </p>
+    <div style="background: var(--bg-dark); border: 1px dashed var(--primary); display: inline-block; padding: 15px; margin-top: 20px; border-radius: 8px;">
+        <p style="color: var(--secondary); font-size: 11px; margin: 0 0 8px 0;">☕ RESPALDA EL PROYECTO</p>
+        <p style="color: #00ff00; font-size: 12px; margin: 0; font-weight: bold;">NEQUI: 3245634023</p>
+    </div>
+</section>
+
+<!-- BOTÓN ARRIBA -->
+<button id="btn-top" onclick="window.scrollTo(0,0);">▲</button>
+
+<!-- ==================== JAVASCRIPT MASTER ==================== -->
+<script>
+
+const juegosData = [
+    {
+        id: "gow_chains",
+        name: "God of War Chains of Olympus",
+        img: "https://upload.wikimedia.org/wikipedia/en/7/7d/God_of_War_Chains_of_Olympus.jpg",
+        link: "https://modsfire.com/NGbDPnWe5eNkjh2",
+        category: "accion",
+        size: "1.2 GB",
+        region: "🇺🇸 USA",
+        players: "single",
+        config: "• Salto de cuadros: 1<br>• Motor gráfico: Vulkan<br>• Resolución: 2x PSP",
+        tags: ["god", "war", "gow", "chains", "olympus", "kratos", "dios de la guerra", "dios de guerra", "olimpus", "cheins", "gof de war", "gow1", "gow 1"],
+        top: true, rank: "🥇 TOP 1"
+    },
+    {
+        id: "gow_ghost",
+        name: "God of War Ghost of Sparta",
+        img: "https://upload.wikimedia.org/wikipedia/en/1/1b/God_of_War_Ghost_of_Sparta.jpg",
+        link: "https://modsfire.com/download/gOh6a3WH8a0uvUR/cb98a",
+        category: "accion",
+        size: "1.1 GB",
+        region: "🇺🇸 USA",
+        players: "single",
+        config: "• Caché de vértices: Activado<br>• Salto de cuadros: 1<br>• Modificar velocidad: 200%",
+        tags: ["god", "war", "ghost", "sparta", "gow", "kratos", "dios de la guerra", "fantasma de esparta", "gost", "gof de war", "gow2", "gow 2"],
+        top: true, rank: "🥈 TOP 2"
+    },
+    {
+        id: "gta_vcs",
+        name: "GTA Vice City Stories",
+        img: "https://upload.wikimedia.org/wikipedia/en/0/0c/GTAVCSbox.jpg",
+        link: "https://modsfire.com/download/6y585n71vZ8Ge3C/f338f",
+        category: "mundo-abierto",
+        size: "860 MB",
+        region: "🇺🇸 USA",
+        players: "multi",
+        config: "• Renderizado por búfer: Activado<br>• Memoria rápida: Activado",
+        tags: ["gta", "vice", "city", "stories", "vcs", "grand", "theft", "auto", "bise siti", "vais siti", "vaici", "carros", "gta vice", "gtavice"],
+        top: false
+    },
+    {
+        id: "gta_lcs",
+        name: "GTA Liberty City Stories",
+        img: "https://upload.wikimedia.org/wikipedia/en/7/7b/GTALCSbox.jpg",
+        link: "https://modsfire.com/IGR53qPQLMFr525",
+        category: "mundo-abierto",
+        size: "780 MB",
+        region: "🇪🇺 EUR",
+        players: "multi",
+        config: "• Sombreadores: Activados<br>• Salto de cuadros: Desactivado",
+        tags: ["gta", "liberty", "city", "lcs", "grand", "theft", "auto", "liberti siti", "carros", "gta liberty", "gtaliberty"],
+        top: false
+    },
+    {
+        id: "pop_rev",
+        name: "Prince of Persia Revelations",
+        img: "https://upload.wikimedia.org/wikipedia/en/2/2c/Prince_of_Persia_Revelations.jpg",
+        link: "https://modsfire.com/MZyOMn0Cet33Vqs",
+        category: "accion",
+        size: "1.3 GB",
+        region: "🇪🇺 EUR",
+        players: "single",
+        config: "• V-Sync: Desactivado<br>• Resolución: 2x PSP",
+        tags: ["prince", "persia", "revelations", "pop", "principe de persia", "prins", "rebelations"],
+        top: false
+    },
+    {
+        id: "dbz_shin",
+        name: "DBZ Shin Budokai",
+        img: "https://upload.wikimedia.org/wikipedia/en/8/8e/Dragon_Ball_Z_Shin_Budokai.jpg",
+        link: "https://modsfire.com/8JgC273NK7Ylh2F",
+        category: "accion",
+        size: "200 MB",
+        region: "🇺🇸 USA",
+        players: "multi",
+        config: "• Corre perfecto en todo celular.<br>• Resolución recomendada: 3x o 4x",
+        tags: ["dbz", "dragon", "ball", "z", "shin", "budokai", "goku", "dragonbol", "budocai", "peleas", "esferas del dragon"],
+        top: true, rank: "🥉 TOP 3"
+    },
+    {
+        id: "dbz_budokai2",
+        name: "DBZ Budokai Tenkaichi 2",
+        img: "https://upload.wikimedia.org/wikipedia/en/2/2d/Dragon_Ball_Z_Shin_Budokai_2.jpg",
+        link: "https://modsfire.com/R669Z4IoTLPd3h4",
+        category: "accion",
+        size: "350 MB",
+        region: "🇺🇸 USA",
+        players: "multi",
+        config: "• Caché de texturas vago: Activado",
+        tags: ["dbz", "budokai", "dragon", "goku", "tenkaichi", "tencaichi", "dragonbol 2"],
+        top: false
+    },
+    {
+        id: "tekken6",
+        name: "Tekken 6",
+        img: "https://upload.wikimedia.org/wikipedia/en/6/6f/Tekken_6_cover.jpg",
+        link: "https://modsfire.com/3B5a4VrDg8UY3ah",
+        category: "accion",
+        size: "730 MB",
+        region: "🇺🇸 USA",
+        players: "multi",
+        config: "• Pruebas alfa: Ignorar<br>• Corre fluido a 60 FPS estables.",
+        tags: ["tekken", "fighting", "6", "peleas", "teken", "tequend", "teken6"],
+        top: false
+    },
+    {
+        id: "nfs_mw",
+        name: "NFS Most Wanted",
+        img: "https://upload.wikimedia.org/wikipedia/en/3/3e/NFSMWPSP.jpg",
+        link: "https://modsfire.com/download/7reX73IfKx6hj8U/eb2c5",
+        category: "carreras",
+        size: "170 MB",
+        region: "🇺🇸 USA",
+        players: "multi",
+        config: "• Desactivar efectos lentos: Activado",
+        tags: ["need", "for", "speed", "nfs", "most", "wanted", "carros", "carreras", "nid for spid", "mos guanted"],
+        top: false
+    },
+    {
+        id: "burnout_leg",
+        name: "Burnout Legends",
+        img: "https://upload.wikimedia.org/wikipedia/en/5/5a/Burnout_Legends.jpg",
+        link: "https://modsfire.com/download/NGbdbMF1d2AM21P/16ed1",
+        category: "carreras",
+        size: "250 MB",
+        region: "🇺🇸 USA",
+        players: "multi",
+        config: "• Hilos por software: Activado",
+        tags: ["burnout", "racing", "legends", "carros", "bornout", "choques"],
+        top: false
+    }
+];
+
+let categoriaActual = "todos";
+let favoritosList = JSON.parse(localStorage.getItem("vortex_favs")) || [];
+
+document.addEventListener("DOMContentLoaded", () => {
+    ejecutarFiltroGlobal();
+    renderizarTop();
+    window.addEventListener("scroll", () => {
+        document.getElementById("btn-top").style.display = window.scrollY > 400 ? "flex" : "none";
+    });
+});
+
+function cambiarTema(tema) {
+    document.body.className = "";
+    if (tema !== "default") {
+        document.body.classList.add(tema);
+    }
+}
+
+function renderizarJuegos(lista) {
+    const contenedor = document.getElementById("juegos");
+    const noResultsMsg = document.getElementById("no-results");
+    contenedor.innerHTML = "";
+    contenedor.appendChild(noResultsMsg);
+
+    document.getElementById("game-counter").innerText = `JUEGOS DISPONIBLES: ${lista.length}`;
+
+    if(lista.length === 0) { noResultsMsg.style.display = "block"; return; }
+    noResultsMsg.style.display = "none";
+
+    lista.forEach(juego => {
+        const isFav = favoritosList.includes(juego.id) ? "is-fav" : "";
+        const heartIcon = favoritosList.includes(juego.id) ? "♥" : "♡";
+        const playerBadge = juego.players === "multi" ? "👥 MULTI" : "👤 1P";
+
+        const gameDiv = document.createElement("div");
+        gameDiv.className = "game";
+        gameDiv.id = `card-${juego.id}`;
+
+        gameDiv.innerHTML = `
+            <div class="game-meta">
+                <span class="badge-spec">💾 ${juego.size}</span>
+                <span class="badge-spec">${playerBadge}</span>
+                <span class="badge-spec">${juego.region}</span>
+            </div>
+            <img src="${juego.img}" alt="${juego.name}" loading="lazy">
+            <h3>${juego.name}</h3>
+            
+            <div class="game-actions">
+                <button class="btn-fav ${isFav}" onclick="toggleFavorito('${juego.id}', this)">${heartIcon}</button>
+                <button class="btn-info" onclick="toggleConfigPanel('${juego.id}', true)">ⓘ</button>
+                <a href="${juego.link}" target="_blank" style="flex-grow: 1;">
+                    <button class="btn-download">Descargar</button>
+                </a>
+            </div>
+
+            <div class="config-overlay" id="config-${juego.id}">
+                <h4>🛠️ CONFIG RECOMENDADA</h4>
+                <p>${juego.config}</p>
+                <button class="btn-close-config" onclick="toggleConfigPanel('${juego.id}', false)">CERRAR</button>
+            </div>
+        `;
+        contenedor.appendChild(gameDiv);
+    });
+}
+
+function toggleFavorito(id, boton) {
+    if (favoritosList.includes(id)) {
+        favoritosList = favoritosList.filter(favId => favId !== id);
+        boton.classList.remove("is-fav"); boton.innerText = "♡";
+    } else {
+        favoritosList.push(id);
+        boton.classList.add("is-fav"); boton.innerText = "♥";
+    }
+    localStorage.setItem("vortex_favs", JSON.stringify(favoritosList));
+    if(categoriaActual === "favoritos") ejecutarFiltroGlobal();
+}
+
+function toggleConfigPanel(id, abrir) {
+    document.getElementById(`config-${id}`).classList.toggle("open", abrir);
+}
+
+function seleccionarJuegoAleatorio() {
+    let input = document.getElementById("search").value.toLowerCase().trim();
+    let pool = juegosData.filter(juego => {
+        let coincideCat = (categoriaActual === "todos" || (categoriaActual === "favoritos" && favoritosList.includes(juego.id)) || (categoriaActual === "multiplayer" && juego.players === "multi") || juego.category === categoriaActual);
+        let coincideTxt = exactAndFuzzyMatch(juego, input);
+        return coincideCat && coincideTxt;
+    });
+
+    if (pool.length === 0) return;
+    const elegido = pool[Math.floor(Math.random() * pool.length)];
+    const tarjeta = document.getElementById(`card-${elegido.id}`);
+    if(tarjeta) {
+        tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.querySelectorAll(".game").forEach(g => g.classList.remove("highlighted"));
+        tarjeta.classList.add("highlighted");
+    }
+}
+
+function filtrarCategoria(cat, elemento) {
+    categoriaActual = cat;
+    document.querySelectorAll(".categories .tab").forEach(tab => tab.classList.remove("active"));
+    elemento.classList.add("active");
+    document.getElementById("search").value = "";
+    ejecutarFiltroGlobal();
+}
+
+function exactAndFuzzyMatch(juego, stringBusqueda) {
+    if (stringBusqueda === "") return true;
+    
+    let nombreLower = juego.name.toLowerCase();
+    if (nombreLower.includes(stringBusqueda)) return true;
+    if (juego.tags.some(tag => tag.includes(stringBusqueda) || stringBusqueda.includes(tag))) return true;
+    
+    let terminos = stringBusqueda.split(/\s+/);
+    let cumpleTerminos = terminos.every(termino => {
+        return nombreLower.includes(termino) || juego.tags.some(t => t.includes(termino));
+    });
+    
+    if (cumpleTerminos) return true;
+    
+    return juego.tags.some(tag => {
+        if (Math.abs(tag.length - stringBusqueda.length) > 3) return false;
+        let errores = 0;
+        let i = 0, j = 0;
+        while (i < tag.length && j < stringBusqueda.length) {
+            if (tag[i] !== stringBusqueda[j]) {
+                errores++;
+                if (tag.length > stringBusqueda.length) i++;
+                else if (tag.length < stringBusqueda.length) j++;
+                else { i++; j++; }
+            } else { i++; j++; }
+            if (errores > 2) return false;
+        }
+        return true;
+    });
+}
+
+function ejecutarFiltroGlobal() {
+    let input = document.getElementById("search").value.toLowerCase().trim();
+    let filtrados = juegosData.filter(juego => {
+        let coincideCat = false;
+        if(categoriaActual === "todos") coincideCat = true;
+        else if(categoriaActual === "favoritos") coincideCat = favoritosList.includes(juego.id);
+        else if(categoriaActual === "multiplayer") coincideCat = (juego.players === "multi");
+        else coincideCat = (juego.category === categoriaActual);
+        
+        let coincideTxt = exactAndFuzzyMatch(juego, input);
+        return coincideCat && coincideTxt;
+    });
+    renderizarJuegos(filtrados);
+}
+
+function filtrarContenido() { ejecutarFiltroGlobal(); mostrarSugerencias(); }
+
+function mostrarSugerencias() {
+    let input = document.getElementById("search").value.toLowerCase().trim();
+    let box = document.getElementById("suggestions");
+    box.innerHTML = ""; if (input === "") return;
+
+    let resultados = juegosData.filter(juego => exactAndFuzzyMatch(juego, input));
+    resultados.slice(0, 5).forEach(juego => {
+        let div = document.createElement("div"); div.innerText = juego.name;
+        div.onclick = () => { document.getElementById("search").value = juego.name; box.innerHTML = ""; ejecutarFiltroGlobal(); };
+        box.appendChild(div);
+    });
+}
+
+/* SISTEMA NATIVO DE BÚSQUEDA POR VOZ */
+function activarVoz() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert("Tu entorno de desarrollo local o navegador actual no permite la API de voz. Recuerda que para producción requiere conexión segura (HTTPS).");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'es-CO';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    const micBtn = document.getElementById("mic-btn");
+    micBtn.classList.add("recording");
+
+    recognition.start();
+
+    recognition.onresult = (event) => {
+        let resultadoVoz = event.results[0][0].transcript;
+        if(resultadoVoz.endsWith('.')) {
+            resultadoVoz = resultadoVoz.slice(0, -1);
+        }
+        document.getElementById("search").value = resultadoVoz;
+        ejecutarFiltroGlobal();
+    };
+
+    recognition.onspeechend = () => {
+        recognition.stop();
+        micBtn.classList.remove("recording");
+    };
+
+    recognition.onerror = (event) => {
+        alert("Falta de permisos o error de micrófono. Verifica que no hayas bloqueado el acceso en el navegador.");
+        micBtn.classList.remove("recording");
+    };
+}
+
+function renderizarTop() {
+    const topList = document.getElementById("top-list");
+    const destacados = juegosData.filter(j => j.top).sort((a,b)=>a.rank.localeCompare(b.rank));
+    topList.innerHTML = "";
+    destacados.forEach(juego => {
+        const item = document.createElement("div"); item.className = "top-item";
+        item.innerHTML = `<div class="top-rank">${juego.rank}</div><div><strong>${juego.name}</strong> (${juego.size})</div>`;
+        topList.appendChild(item);
+    });
+}
+
+document.addEventListener("click", (e) => { if (e.target.id !== "search") document.getElementById("suggestions").innerHTML = ""; });
+
+</script>
+</body>
+</html>
