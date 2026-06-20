@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VORTEX PSP | SUPREME EDITION</title>
+<title>VORTEX SYSTEM | MULTI-PLATFORM PORTAL</title>
 
-<!-- Fuentes de Google optimizadas con preconnect para evitar retrasos y fallos -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -23,7 +22,19 @@
     --shadow-color: rgba(0, 191, 255, 0.35);
 }
 
-/* Tema Inferno Red */
+/* Tema VORTEX APK (Verde Matrix Radiante) */
+.theme-apk {
+    --primary: #39ff14;
+    --secondary: #00ffcc;
+    --bg-dark: #050a05;
+    --bg-card: #0d1a0d;
+    --bg-nav: rgba(13, 26, 13, 0.9);
+    --heart: #ff0055;
+    --text-color: #ffffff;
+    --shadow-color: rgba(57, 255, 20, 0.4);
+}
+
+/* Otros Temas Estéticos */
 .theme-inferno {
     --primary: #ff3333;
     --secondary: #ff6600;
@@ -34,8 +45,6 @@
     --text-color: #ffffff;
     --shadow-color: rgba(255, 51, 51, 0.4);
 }
-
-/* Tema Amethyst Purple */
 .theme-amethyst {
     --primary: #9933ff;
     --secondary: #00ffff;
@@ -51,655 +60,581 @@ body {
     margin: 0;
     background: var(--bg-dark);
     color: var(--text-color);
-    /* Cambiado a sans-serif de respaldo para evitar la letra cursiva */
     font-family: 'Press Start 2P', sans-serif;
     text-align: center;
     scroll-behavior: smooth;
     transition: background 0.3s, color 0.3s;
+    overflow-x: hidden;
 }
+
+/* ===== PANTALLA DE INICIO ===== */
+#splash-gate {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: radial-gradient(circle at center, #111122 0%, #050508 100%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#splash-gate.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.05);
+}
+.gate-box {
+    background: rgba(15, 15, 25, 0.85);
+    border: 3px solid #00bfff;
+    box-shadow: 0 0 25px rgba(0, 191, 255, 0.4), inset 0 0 15px rgba(0, 191, 255, 0.1);
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 650px;
+    width: 85%;
+    animation: borderPulse 4s infinite alternate;
+}
+.gate-title {
+    font-size: 26px;
+    color: #ffffff;
+    text-shadow: 0 0 12px #00bfff, 0 0 25px #00bfff;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+.gate-subtitle {
+    font-size: 9px;
+    color: #00ffff;
+    text-shadow: 0 0 5px rgba(0,255,255,0.5);
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+.gate-options {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.gate-btn {
+    background: #0a0a10;
+    font-family: 'Press Start 2P', sans-serif;
+    padding: 22px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    width: 210px;
+    box-sizing: border-box;
+}
+.gate-btn.psp-choice { 
+    border: 3px solid #00bfff; 
+    color: #00bfff; 
+    box-shadow: 0 0 10px rgba(0,191,255,0.2);
+}
+.gate-btn.psp-choice:hover { 
+    background: #00bfff; 
+    color: #000; 
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px rgba(0,191,255,0.7); 
+}
+.gate-btn.apk-choice { 
+    border: 3px solid #39ff14; 
+    color: #39ff14;
+    box-shadow: 0 0 10px rgba(57,255,20,0.2);
+}
+.gate-btn.apk-choice:hover { 
+    background: #39ff14; 
+    color: #000; 
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px rgba(57,255,20,0.7); 
+}
+.gate-btn span { font-size: 8px; opacity: 0.9; font-weight: bold; }
+
+@keyframes borderPulse {
+    0% { border-color: #00bfff; box-shadow: 0 0 25px rgba(0, 191, 255, 0.4); }
+    50% { border-color: #00ffff; box-shadow: 0 0 35px rgba(0, 255, 255, 0.5); }
+    100% { border-color: #39ff14; box-shadow: 0 0 25px rgba(57, 255, 20, 0.4); }
+}
+
+/* ===== CONTENIDO PRINCIPAL ===== */
+#main-content { opacity: 0; transition: opacity 0.4s ease; }
+#main-content.visible { opacity: 1; }
 
 /* ===== BARRA DE NAVEGACIÓN ===== */
 nav {
     background: var(--bg-nav);
     padding: 18px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 1000;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--primary);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px;
 }
 nav .nav-links a {
-    color: var(--primary);
-    margin: 0 10px;
-    text-decoration: none;
-    font-size: 10px;
-    transition: 0.3s;
+    color: var(--primary); margin: 0 10px; text-decoration: none; font-size: 10px; transition: 0.3s;
 }
-nav .nav-links a:hover {
-    color: var(--secondary);
-    text-shadow: 0 0 5px var(--secondary);
-}
+nav .nav-links a:hover { color: var(--secondary); text-shadow: 0 0 5px var(--secondary); }
 
 .server-status {
-    font-size: 8px;
-    color: #00ff00;
-    border: 1px solid #00ff00;
-    padding: 4px 8px;
-    border-radius: 4px;
-    background: rgba(0, 255, 0, 0.1);
+    font-size: 8px; color: #00ff00; border: 1px solid #00ff00;
+    padding: 4px 8px; border-radius: 4px; background: rgba(0, 255, 0, 0.1);
 }
 
-/* SELECTOR DE TEMAS INTERACTIVOS */
 .theme-selector select {
-    background: var(--bg-card);
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
-    font-size: 8px;
-    padding: 6px;
-    border-radius: 4px;
-    cursor: pointer;
-    outline: none;
+    background: var(--bg-card); color: var(--primary); border: 1px solid var(--primary);
+    font-family: 'Press Start 2P', sans-serif; font-size: 8px; padding: 6px; border-radius: 4px;
+    cursor: pointer; outline: none;
 }
 
-/* ===== ENCABEZADO ===== */
-h1 {
-    color: var(--primary);
-    margin-top: 40px;
-    font-size: 24px;
-    text-shadow: 0 0 10px var(--shadow-color);
-}
+h1 { color: var(--primary); margin-top: 40px; font-size: 24px; text-shadow: 0 0 10px var(--shadow-color); }
 
 .warning-box {
-    color: var(--primary);
-    font-size: 9px;
-    margin: 15px auto;
-    padding: 10px;
-    border: 1px dashed var(--primary);
-    display: inline-block;
-    border-radius: 6px;
+    color: var(--primary); font-size: 9px; margin: 15px auto; padding: 10px;
+    border: 1px dashed var(--primary); display: inline-block; border-radius: 6px;
 }
 
-/* ===== BUSCADOR COMPUESTO CON BOTONES ===== */
-.search-wrapper {
-    display: flex;
-    max-width: 600px;
-    width: 92%;
-    margin: 25px auto 10px auto;
-    gap: 8px;
-    position: relative;
+.audio-toggle {
+    background: none; border: 1px solid var(--primary); color: var(--primary);
+    padding: 5px 8px; font-size: 9px; border-radius: 4px; cursor: pointer;
+    font-family: 'Press Start 2P', sans-serif;
 }
-.search-container {
-    position: relative;
-    flex-grow: 1;
-}
+
+/* ===== BUSCADOR COMPUESTO ===== */
+.search-wrapper { display: flex; max-width: 600px; width: 92%; margin: 25px auto 10px auto; gap: 8px; position: relative; }
+.search-container { position: relative; flex-grow: 1; }
 #search {
-    padding: 14px;
-    width: 100%;
-    box-sizing: border-box;
-    background: var(--bg-card);
-    border: 2px solid var(--primary);
-    color: var(--text-color);
-    border-radius: 8px;
-    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
-    font-size: 10px;
-    outline: none;
+    padding: 14px; width: 100%; box-sizing: border-box; background: var(--bg-card);
+    border: 2px solid var(--primary); color: var(--text-color); border-radius: 8px;
+    font-family: 'Press Start 2P', sans-serif; font-size: 10px; outline: none;
 }
 
-/* BOTÓN DE MICRÓFONO 🎙️ */
-.btn-voice {
-    background: var(--bg-card);
-    border: 2px solid var(--primary);
-    color: var(--primary);
-    font-size: 14px;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: 0.3s;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.btn-voice, .btn-random {
+    background: var(--bg-card); border: 2px solid var(--primary); color: var(--primary);
+    cursor: pointer; border-radius: 8px; transition: 0.3s; width: 50px;
+    display: flex; align-items: center; justify-content: center;
 }
-.btn-voice.recording {
-    background: #ff3333;
-    color: white;
-    border-color: #ff3333;
-    animation: pulseMic 1s infinite alternate;
-}
-@keyframes pulseMic {
-    0% { box-shadow: 0 0 5px #ff3333; }
-    100% { box-shadow: 0 0 20px #ff3333; }
-}
+.btn-voice { font-size: 14px; padding: 10px; }
+.btn-random { font-size: 16px; }
+.btn-voice.recording { background: #ff3333; color: white; border-color: #ff3333; animation: pulseMic 1s infinite alternate; }
 
-/* BOTÓN ALEATORIO 🎲 */
-.btn-random {
-    background: var(--bg-card);
-    border: 2px solid var(--primary);
-    color: var(--primary);
-    font-size: 16px;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: 0.3s;
-    width: 50px;
-}
-.btn-random:hover, .btn-voice:hover:not(.recording) {
-    background: var(--primary);
-    color: var(--bg-dark);
-}
+@keyframes pulseMic { 0% { box-shadow: 0 0 5px #ff3333; } 100% { box-shadow: 0 0 20px #ff3333; } }
 
-/* SUGERENCIAS */
+.btn-random:hover, .btn-voice:hover:not(.recording) { background: var(--primary); color: var(--bg-dark); }
+
 #suggestions {
-    position: absolute;
-    background: var(--bg-card);
-    border: 1px solid var(--primary);
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    left: 0; top: 105%;
-    z-index: 999;
-    border-radius: 8px;
-    text-align: left;
-    box-sizing: border-box;
+    position: absolute; background: var(--bg-card); border: 1px solid var(--primary);
+    width: 100%; max-height: 200px; overflow-y: auto; left: 0; top: 105%; z-index: 999;
+    border-radius: 8px; text-align: left; box-sizing: border-box;
 }
-#suggestions div {
-    padding: 12px;
-    cursor: pointer;
-    font-size: 9px;
-    color: var(--primary);
-}
-#suggestions div:hover {
-    background: rgba(0, 191, 255, 0.2);
-}
+#suggestions div { padding: 12px; cursor: pointer; font-size: 9px; color: var(--primary); }
+#suggestions div:hover { background: rgba(0, 191, 255, 0.2); }
 
-/* FILTROS Y CATEGORÍAS */
-.game-counter {
-    font-size: 8px;
-    color: var(--primary);
-    margin-bottom: 15px;
-    opacity: 0.8;
-}
-.categories {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 30px;
-    padding: 0 10px;
-}
+.game-counter { font-size: 8px; color: var(--primary); margin-bottom: 15px; opacity: 0.8; }
+
+/* CATEGORÍAS */
+.categories { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; padding: 0 10px; }
 .tab {
-    background: transparent;
-    border: 1px solid var(--primary);
-    color: var(--primary);
-    padding: 8px 12px;
-    font-size: 8px;
-    cursor: pointer;
-    border-radius: 6px;
-    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
+    background: transparent; border: 1px solid var(--primary); color: var(--primary);
+    padding: 8px 12px; font-size: 8px; cursor: pointer; border-radius: 6px;
+    font-family: 'Press Start 2P', sans-serif; transition: 0.2s;
 }
-.tab.active, .tab:hover {
-    background: var(--primary);
-    color: var(--bg-dark);
-}
+.tab.active, .tab:hover { background: var(--primary); color: var(--bg-dark); }
 .tab-fav { border-color: var(--heart); color: var(--heart); }
 .tab-fav.active, .tab-fav:hover { background: var(--heart); color: white; }
 
 /* ===== TARJETAS 3D ===== */
 .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    perspective: 1000px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px; max-width: 1200px; margin: 0 auto; padding: 0 20px; perspective: 1000px;
 }
-
 .game {
-    background: var(--bg-card);
-    border: 1px solid rgba(0, 191, 255, 0.2);
-    padding: 14px;
-    border-radius: 14px;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    box-sizing: border-box;
-    overflow: hidden;
-    height: 360px;
-    transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+    background: var(--bg-card); border: 1px solid rgba(0, 191, 255, 0.15);
+    padding: 14px; border-radius: 14px; text-align: left; display: flex;
+    flex-direction: column; justify-content: space-between; position: relative;
+    box-sizing: border-box; overflow: hidden; height: 380px;
     transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s, border-color 0.3s;
     transform-style: preserve-3d;
 }
-
 .game:hover {
-    transform: perspective(1000px) scale(1.04) rotateX(6deg) rotateY(-3deg);
-    box-shadow: -5px 12px 30px var(--shadow-color);
-    border-color: var(--primary);
+    transform: perspective(1000px) scale(1.03) rotateX(4deg) rotateY(-2deg);
+    box-shadow: -5px 12px 25px var(--shadow-color); border-color: var(--primary);
 }
+.game.highlighted { animation: flashHighlight 1.5s ease-in-out 2; border: 2px solid var(--secondary); }
 
-.game.highlighted {
-    animation: flashHighlight 1.5s ease-in-out 2;
-    border: 2px solid var(--secondary);
-}
-@keyframes flashHighlight {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.08); box-shadow: 0 0 30px var(--primary); }
-}
+@keyframes flashHighlight { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); box-shadow: 0 0 25px var(--primary); } }
 
-.game-meta, .game img, .game h3, .game-actions {
-    transform: translateZ(25px);
-}
+.game-meta, .game-img-container, .game h3, .game-actions { transform: translateZ(20px); }
 
-.game-meta {
-    display: flex;
-    justify-content: space-between;
-    font-size: 7px;
-    margin-bottom: 8px;
-}
-.badge-spec {
-    background: rgba(0,0,0,0.3);
-    padding: 4px 6px;
-    border-radius: 4px;
-    border: 1px solid var(--primary);
-    color: var(--text-color);
-}
+.game-meta { display: flex; justify-content: space-between; font-size: 7px; margin-bottom: 8px; flex-wrap: wrap; gap: 4px; }
+.badge-spec { background: rgba(0,0,0,0.4); padding: 4px 6px; border-radius: 4px; border: 1px solid var(--primary); color: var(--text-color); }
 
-.game img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 10px;
-}
+.game-img-container { width: 100%; height: 140px; overflow: hidden; border-radius: 10px; background: #000; display: flex; align-items: center; justify-content: center; }
+.game-img-container img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 
-.game h3 {
-    font-size: 10px;
-    margin: 12px 0;
-    color: var(--primary);
-    line-height: 1.4;
-    height: 28px;
-    overflow: hidden;
-}
+.game h3 { font-size: 10px; margin: 12px 0 6px 0; color: var(--primary); line-height: 1.4; height: 28px; overflow: hidden; }
 
-/* ACCIONES DE TARJETA */
-.game-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-}
-.game-actions button {
-    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
-    cursor: pointer;
-}
-.btn-fav {
-    background: rgba(0,0,0,0.2);
-    border: 1px solid var(--primary);
-    color: var(--text-color);
-    width: 45px;
-    padding: 10px 0;
-    border-radius: 8px;
-    font-size: 12px;
-}
-.btn-fav.is-fav {
-    color: var(--heart);
-    border-color: var(--heart);
-    background: rgba(255, 69, 0, 0.1);
-}
-.btn-info {
-    background: rgba(0,0,0,0.2);
-    border: 1px solid var(--primary);
-    color: var(--primary);
-    width: 45px;
-    padding: 10px 0;
-    border-radius: 8px;
-    font-size: 12px;
-}
-.btn-download {
-    flex-grow: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background: var(--primary);
-    color: var(--bg-dark);
-    font-weight: bold;
-    font-size: 10px;
-}
+.game-actions { display: flex; gap: 8px; margin-top: 6px; }
+.game-actions button { font-family: 'Press Start 2P', sans-serif; cursor: pointer; }
+.btn-fav { background: rgba(0,0,0,0.2); border: 1px solid var(--primary); color: var(--text-color); width: 45px; padding: 10px 0; border-radius: 8px; font-size: 12px; }
+.btn-fav.is-fav { color: var(--heart); border-color: var(--heart); background: rgba(255, 69, 0, 0.1); }
+.btn-info { background: rgba(0,0,0,0.2); border: 1px solid var(--primary); color: var(--primary); width: 45px; padding: 10px 0; border-radius: 8px; font-size: 12px; }
+.btn-download { flex-grow: 1; padding: 12px; border: none; border-radius: 8px; background: var(--primary); color: var(--bg-dark); font-weight: bold; font-size: 10px; }
 
-/* PANEL CONFIGURACIÓN PPSSPP */
+/* CONFIG PANEL OVERLAY */
 .config-overlay {
-    background: var(--bg-card);
-    border: 2px solid var(--primary);
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    border-radius: 14px;
-    box-sizing: border-box;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    z-index: 10;
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: var(--bg-card); border: 2px solid var(--primary); position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%; border-radius: 14px; box-sizing: border-box;
+    padding: 15px; display: flex; flex-direction: column; justify-content: center; z-index: 10;
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .config-overlay.open { transform: translateY(0); }
 .config-overlay h4 { font-size: 9px; color: var(--primary); margin: 0 0 10px 0; }
 .config-overlay p { font-size: 7px; line-height: 1.6; text-align: left; color: var(--text-color); margin: 5px 0; }
-.btn-close-config {
-    background: var(--heart);
-    color: white;
-    font-size: 7px;
-    padding: 8px;
-    margin-top: 10px;
-    border-radius: 4px;
-    border: none;
-}
+.btn-close-config { background: var(--heart); color: white; font-size: 7px; padding: 8px; margin-top: 10px; border-radius: 4px; border: none; }
 
-/* BOTÓN DE CORREO DIRECTO */
 .btn-email {
-    display: inline-block;
-    background: transparent;
-    border: 2px solid var(--primary);
-    color: var(--primary);
-    padding: 14px 20px;
-    font-family: 'Press Start 2P', sans-serif; /* Cambiado a sans-serif */
-    font-size: 9px;
-    text-decoration: none;
-    border-radius: 8px;
-    margin-top: 15px;
-    transition: 0.3s;
-    cursor: pointer;
+    display: inline-block; background: transparent; border: 2px solid var(--primary); color: var(--primary);
+    padding: 14px 20px; font-family: 'Press Start 2P', sans-serif; font-size: 9px;
+    text-decoration: none; border-radius: 8px; margin-top: 15px; transition: 0.3s; cursor: pointer;
 }
-.btn-email:hover {
-    background: var(--primary);
-    color: var(--bg-dark);
-    box-shadow: 0 0 15px var(--primary);
-}
+.btn-email:hover { background: var(--primary); color: var(--bg-dark); box-shadow: 0 0 15px var(--primary); }
 
-/* VOLVER ARRIBA */
+/* ESTILOS DEL BOTÓN VOLVER ARRIBA */
 #btn-top {
-    position: fixed;
-    bottom: 20px; right: 20px;
-    width: 45px; height: 45px;
-    background: var(--bg-card);
-    border: 2px solid var(--primary);
-    color: var(--primary);
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    z-index: 999;
-    display: none;
-    align-items: center;
-    justify-content: center;
+    position: fixed; bottom: 20px; right: 20px; width: 45px; height: 45px;
+    background: var(--bg-card); border: 2px solid var(--primary); color: var(--primary);
+    border-radius: 8px; font-size: 14px; cursor: pointer; z-index: 999;
+    display: none; align-items: center; justify-content: center;
 }
 
 #no-results { color: var(--heart); font-size: 10px; grid-column: 1 / -1; margin: 20px 0; display: none; }
 
-/* ===== SECCIONES ===== */
 section { margin-top: 80px; padding: 40px 20px; background: var(--bg-card); border-top: 1px solid var(--primary); }
 section h2 { color: var(--primary); font-size: 12px; margin-bottom: 25px; }
 section p { font-size: 10px; line-height: 1.8; }
 
 .top-container { max-width: 800px; margin: 0 auto; }
 .top-item {
-    display: flex; align-items: center; background: var(--bg-dark);
-    margin: 10px 0; padding: 15px; border-radius: 8px;
-    border-left: 4px solid var(--primary); font-size: 9px; text-align: left;
+    display: flex; align-items: center; background: var(--bg-dark); margin: 10px 0;
+    padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary); font-size: 9px; text-align: left;
 }
 .top-rank { font-size: 11px; margin-right: 15px; min-width: 30px; }
 
+/* POPUP LOGROS */
+#achievement-popup {
+    position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+    background: #111; border: 2px solid #ffd700; color: #ffd700; padding: 15px;
+    border-radius: 8px; font-size: 8px; z-index: 10000; box-shadow: 0 0 20px rgba(255,215,0,0.4);
+    transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;
+}
+#achievement-popup.show { bottom: 30px; }
+
+/* AVISO DE SECCIÓN VACÍA EN APK */
+.empty-state {
+    grid-column: 1 / -1;
+    padding: 40px 20px;
+    border: 2px dashed var(--primary);
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    color: var(--primary);
+    font-size: 10px;
+    line-height: 1.8;
+}
+
 @media(max-width:600px){
-    h1 { font-size: 14px; }
+    h1 { font-size: 13px; }
     nav { padding: 10px; justify-content: center; }
     .container { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
     .game { height: auto; }
+    .gate-box { padding: 25px 15px; }
+    .gate-btn { width: 100%; font-size: 11px; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ===== NAV ===== -->
-<nav>
-    <div>
-        <span class="logo" style="color: var(--text-color);">⚡ VORTEX</span>
-        <span class="server-status">SERVER ONLINE 🟢</span>
+<div id="splash-gate">
+    <div class="gate-box">
+        <div class="gate-title">⚡ VORTEX SYSTEM ⚡</div>
+        <div class="gate-subtitle">SELECCIONA TU DIMENSIÓN DE JUEGO</div>
+        <div class="gate-options">
+            <button class="gate-btn psp-choice" onclick="inicializarPortal('psp')">
+                🎮 VORTEX PSP
+                <span>Catálogo Completo ISO</span>
+            </button>
+            <button class="gate-btn apk-choice" onclick="inicializarPortal('apk')">
+                🤖 VORTEX APK
+                <span>Próximamente</span>
+            </button>
+        </div>
     </div>
-    <div class="nav-links">
-        <a href="#juegos">Juegos</a>
-        <a href="#top">Top 3</a>
-        <a href="#soporte">Soporte</a>
-        <a href="#donar">Donar</a>
-    </div>
-    <div class="theme-selector">
-        <select id="themeSelect" onchange="cambiarTema(this.value)">
-            <option value="default">🌐 VORTEX CYAN</option>
-            <option value="theme-inferno">🔥 INFERNO RED</option>
-            <option value="theme-amethyst">🔮 AMETHYST PURPLE</option>
-        </select>
-    </div>
-</nav>
-
-<h1>🎮 VORTEX PSP 🎮</h1>
-
-<div class="warning-box">
-    ⚠️ Usa ZArchiver para extraer archivos .zip o .7z
 </div>
 
-<!-- BUSCADOR -->
-<div class="search-wrapper">
-    <button class="btn-voice" id="mic-btn" onclick="activarVoz()" title="Buscar por voz">🎙️</button>
-    <div class="search-container">
-        <input type="text" id="search" placeholder="Buscar juego o tag..." onkeyup="filtrarContenido();" autocomplete="off">
-        <div id="suggestions"></div>
+<div id="main-content">
+    <nav>
+        <div>
+            <span id="vortex-logo" class="logo" style="color: var(--text-color); font-weight: bold;">⚡ VORTEX PSP</span>
+            <span class="server-status">SERVER ONLINE 🟢</span>
+        </div>
+        <div class="nav-links">
+            <a href="#juegos">Catálogo</a>
+            <a href="#top" id="nav-top-label">Top 3</a>
+            <a href="#soporte">Soporte</a>
+            <button class="audio-toggle" id="audio-btn" onclick="toggleAudioMode()">🔊 SONIDO ON</button>
+        </div>
+        <div class="theme-selector">
+            <select id="themeSelect" onchange="cambiarTema(this.value)">
+                <option value="default" id="opt-default">🌐 VORTEX NEÓN</option>
+                <option value="theme-inferno">🔥 INFERNO RED</option>
+                <option value="theme-amethyst">🔮 AMETHYST PURPLE</option>
+            </select>
+        </div>
+    </nav>
+
+    <h1 id="main-title">🎮 VORTEX PSP 🎮</h1>
+
+    <div class="warning-box" id="platform-warning">
+        ⚠️ Usa ZArchiver para extraer archivos .zip o .7z
     </div>
-    <button class="btn-random" onclick="seleccionarJuegoAleatorio();">🎲</button>
-</div>
 
-<div class="game-counter" id="game-counter">Cargando catálogo...</div>
-
-<!-- CATEGORÍAS -->
-<div class="categories">
-    <button class="tab active" onclick="filtrarCategoria('todos', this)">TODOS</button>
-    <button class="tab" onclick="filtrarCategoria('accion', this)">💥 ACCIÓN</button>
-    <button class="tab" onclick="filtrarCategoria('carreras', this)">🏎️ CARRERAS</button>
-    <button class="tab" onclick="filtrarCategoria('mundo-abierto', this)">🏙️ MUNDO</button>
-    <button class="tab" onclick="filtrarCategoria('multiplayer', this)">👥 MULTI</button>
-    <button class="tab tab-fav" onclick="filtrarCategoria('favoritos', this)">♥ FAVS</button>
-</div>
-
-<!-- CONTENEDOR JUEGOS -->
-<div id="juegos" class="container">
-    <div id="no-results">❌ No se encontraron juegos.</div>
-</div>
-
-<!-- TOP JUEGOS -->
-<section id="top">
-    <h2>⭐ TOP 3 MÁS DESCARGADOS</h2>
-    <div class="top-container" id="top-list"></div>
-</section>
-
-<!-- SOPORTE Y REPORTE -->
-<section id="soporte">
-    <h2>📩 SOPORTE Y QUEJAS</h2>
-    <p>¿Encontraste algún enlace caído o tienes alguna sugerencia para el catálogo?</p>
-    <a href="mailto:jca5145546@gmail.com?subject=[REPORTE%20VORTEX%20PSP]&body=Escribe%20aquí%20tu%20queja%20o%20el%20nombre%20del%20juego%20con%20falla:" class="btn-email">📧 REPORTAR UNA QUEJA</a>
-</section>
-
-<!-- DONAR (COSTOS DEL SERVIDOR) -->
-<section id="donar">
-    <h2>🚀 MANTÉN EL SERVIDOR VIVO</h2>
-    <p>VORTEX PSP se mantiene libre de acortadores molestos y publicidad invasiva gracias a la comunidad.</p>
-    <p style="margin-top: 10px; font-size: 9px; line-height: 1.6; color: #aaaaaa;">
-        Cada aporte va destinado directamente a cubrir los costos del servidor, almacenamiento en la nube de alta velocidad y el mantenimiento técnico para garantizar que ningún enlace se caiga. ¡Ayúdanos a mantener el catálogo online 24/7!
-    </p>
-    <div style="background: var(--bg-dark); border: 1px dashed var(--primary); display: inline-block; padding: 15px; margin-top: 20px; border-radius: 8px;">
-        <p style="color: var(--secondary); font-size: 11px; margin: 0 0 8px 0;">☕ RESPALDA EL PROYECTO</p>
-        <p style="color: #00ff00; font-size: 12px; margin: 0; font-weight: bold;">NEQUI: 3245634023</p>
+    <div class="search-wrapper">
+        <button class="btn-voice" id="mic-btn" onclick="activarVoz()" title="Buscar por voz">🎙️</button>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Buscar título o tag..." onkeyup="filtrarContenido();" autocomplete="off">
+            <div id="suggestions"></div>
+        </div>
+        <button class="btn-random" onclick="seleccionarJuegoAleatorio();">🎲</button>
     </div>
-</section>
 
-<!-- BOTÓN ARRIBA -->
-<button id="btn-top" onclick="window.scrollTo(0,0);">▲</button>
+    <div class="game-counter" id="game-counter">Cargando catálogo...</div>
 
-<!-- ==================== JAVASCRIPT MASTER ==================== -->
+    <div class="categories" id="categories-tabs"></div>
+
+    <div id="juegos" class="container">
+        <div id="no-results">❌ No se encontraron resultados.</div>
+    </div>
+
+    <section id="top">
+        <h2 id="top-title-header">⭐ TOP MÁS DESCARGADOS</h2>
+        <div class="top-container" id="top-list"></div>
+    </section>
+
+    <section id="soporte">
+        <h2>📩 SOPORTE Y QUEJAS</h2>
+        <p>¿Encontraste algún enlace caído o tienes alguna sugerencia para expandir el servidor?</p>
+        <a href="mailto:jca5145546@gmail.com?subject=[REPORTE%20VORTEX%20SISTEMA]&body=Indica%20el%20nombre%20del%20juego%20o%20APK%20con%20falla:" class="btn-email">📧 REPORTAR UNA QUEJA</a>
+    </section>
+
+    <section id="donar">
+        <h2>🚀 MANTÉN EL SERVIDOR VIVO</h2>
+        <p>VORTEX se mantiene libre de acortadores molestos y publicidad invasiva gracias a la comunidad.</p>
+        <div style="background: var(--bg-dark); border: 1px dashed var(--primary); display: inline-block; padding: 15px; margin-top: 20px; border-radius: 8px;">
+            <p style="color: var(--secondary); font-size: 11px; margin: 0 0 8px 0;">☕ RESPALDA EL PROYECTO</p>
+            <p style="color: #00ff00; font-size: 12px; margin: 0; font-weight: bold;">NEQUI: 3245634023</p>
+        </div>
+    </section>
+
+    <button id="btn-top" onclick="window.scrollTo(0,0);">▲</button>
+</div>
+
+<div id="achievement-popup">🏆 ¡LOGRO DESBLOQUEADO!</div>
+
 <script>
-
 const juegosData = [
     {
-        id: "gow_chains",
+        id: "gow_chains", platform: "psp",
         name: "God of War Chains of Olympus",
-        img: "https://upload.wikimedia.org/wikipedia/en/7/7d/God_of_War_Chains_of_Olympus.jpg",
+        img: "https://i.ibb.co/8DxhhnGQ/gow-chains.jpg",
         link: "https://modsfire.com/NGbDPnWe5eNkjh2",
-        category: "accion",
-        size: "1.2 GB",
-        region: "🇺🇸 USA",
-        players: "single",
+        category: "accion", size: "1.2 GB", region: "🇺🇸 USA", players: "single",
         config: "• Salto de cuadros: 1<br>• Motor gráfico: Vulkan<br>• Resolución: 2x PSP",
-        tags: ["god", "war", "gow", "chains", "olympus", "kratos", "dios de la guerra", "dios de guerra", "olimpus", "cheins", "gof de war", "gow1", "gow 1"],
-        top: true, rank: "🥇 TOP 1"
+        tags: ["god", "war", "gow", "chains", "olympus", "kratos", "dios de la guerra"], top: true, rank: "🥇 TOP 1"
     },
     {
-        id: "gow_ghost",
+        id: "gow_ghost", platform: "psp",
         name: "God of War Ghost of Sparta",
-        img: "https://upload.wikimedia.org/wikipedia/en/1/1b/God_of_War_Ghost_of_Sparta.jpg",
+        img: "https://i.ibb.co/RGbBP77P/gow-ghost.jpg",
         link: "https://modsfire.com/download/gOh6a3WH8a0uvUR/cb98a",
-        category: "accion",
-        size: "1.1 GB",
-        region: "🇺🇸 USA",
-        players: "single",
+        category: "accion", size: "1.1 GB", region: "🇺🇸 USA", players: "single",
         config: "• Caché de vértices: Activado<br>• Salto de cuadros: 1<br>• Modificar velocidad: 200%",
-        tags: ["god", "war", "ghost", "sparta", "gow", "kratos", "dios de la guerra", "fantasma de esparta", "gost", "gof de war", "gow2", "gow 2"],
-        top: true, rank: "🥈 TOP 2"
+        tags: ["god", "war", "ghost", "sparta", "gow", "kratos"], top: true, rank: "🥈 TOP 2"
     },
     {
-        id: "gta_vcs",
+        id: "gta_vcs", platform: "psp",
         name: "GTA Vice City Stories",
-        img: "https://upload.wikimedia.org/wikipedia/en/0/0c/GTAVCSbox.jpg",
+        img: "https://i.ibb.co/twQbMVDs/gta-vcs.jpg",
         link: "https://modsfire.com/download/6y585n71vZ8Ge3C/f338f",
-        category: "mundo-abierto",
-        size: "860 MB",
-        region: "🇺🇸 USA",
-        players: "multi",
+        category: "mundo-abierto", size: "860 MB", region: "🇺🇸 USA", players: "multi",
         config: "• Renderizado por búfer: Activado<br>• Memoria rápida: Activado",
-        tags: ["gta", "vice", "city", "stories", "vcs", "grand", "theft", "auto", "bise siti", "vais siti", "vaici", "carros", "gta vice", "gtavice"],
-        top: false
+        tags: ["gta", "vice", "city", "stories", "vcs"], top: false
     },
     {
-        id: "gta_lcs",
+        id: "gta_lcs", platform: "psp",
         name: "GTA Liberty City Stories",
-        img: "https://upload.wikimedia.org/wikipedia/en/7/7b/GTALCSbox.jpg",
+        img: "https://i.ibb.co/4nTGC4yb/gta-lcs.jpg",
         link: "https://modsfire.com/IGR53qPQLMFr525",
-        category: "mundo-abierto",
-        size: "780 MB",
-        region: "🇪🇺 EUR",
-        players: "multi",
+        category: "mundo-abierto", size: "780 MB", region: "🇪🇺 EUR", players: "multi",
         config: "• Sombreadores: Activados<br>• Salto de cuadros: Desactivado",
-        tags: ["gta", "liberty", "city", "lcs", "grand", "theft", "auto", "liberti siti", "carros", "gta liberty", "gtaliberty"],
-        top: false
+        tags: ["gta", "liberty", "city", "lcs"], top: false
     },
     {
-        id: "pop_rev",
+        id: "pop_rev", platform: "psp",
         name: "Prince of Persia Revelations",
-        img: "https://upload.wikimedia.org/wikipedia/en/2/2c/Prince_of_Persia_Revelations.jpg",
+        img: "https://i.ibb.co/fzS78hL7/pop-rev.jpg",
         link: "https://modsfire.com/MZyOMn0Cet33Vqs",
-        category: "accion",
-        size: "1.3 GB",
-        region: "🇪🇺 EUR",
-        players: "single",
+        category: "accion", size: "1.3 GB", region: "🇪🇺 EUR", players: "single",
         config: "• V-Sync: Desactivado<br>• Resolución: 2x PSP",
-        tags: ["prince", "persia", "revelations", "pop", "principe de persia", "prins", "rebelations"],
-        top: false
+        tags: ["prince", "persia", "revelations", "pop"], top: false
     },
     {
-        id: "dbz_shin",
+        id: "dbz_shin", platform: "psp",
         name: "DBZ Shin Budokai",
-        img: "https://upload.wikimedia.org/wikipedia/en/8/8e/Dragon_Ball_Z_Shin_Budokai.jpg",
+        img: "https://i.ibb.co/d0T0FJ9K/dbz-shin.jpg",
         link: "https://modsfire.com/8JgC273NK7Ylh2F",
-        category: "accion",
-        size: "200 MB",
-        region: "🇺🇸 USA",
-        players: "multi",
+        category: "accion", size: "200 MB", region: "🇺🇸 USA", players: "multi",
         config: "• Corre perfecto en todo celular.<br>• Resolución recomendada: 3x o 4x",
-        tags: ["dbz", "dragon", "ball", "z", "shin", "budokai", "goku", "dragonbol", "budocai", "peleas", "esferas del dragon"],
-        top: true, rank: "🥉 TOP 3"
+        tags: ["dbz", "dragon", "ball", "z", "shin", "budokai", "goku"], top: true, rank: "🥉 TOP 3"
     },
     {
-        id: "dbz_budokai2",
+        id: "dbz_budokai2", platform: "psp",
         name: "DBZ Budokai Tenkaichi 2",
-        img: "https://upload.wikimedia.org/wikipedia/en/2/2d/Dragon_Ball_Z_Shin_Budokai_2.jpg",
+        img: "https://i.ibb.co/ZzYkQs37/dbz-budokai2.jpg",
         link: "https://modsfire.com/R669Z4IoTLPd3h4",
-        category: "accion",
-        size: "350 MB",
-        region: "🇺🇸 USA",
-        players: "multi",
+        category: "accion", size: "350 MB", region: "🇺🇸 USA", players: "multi",
         config: "• Caché de texturas vago: Activado",
-        tags: ["dbz", "budokai", "dragon", "goku", "tenkaichi", "tencaichi", "dragonbol 2"],
-        top: false
+        tags: ["dbz", "budokai", "dragon", "goku", "tenkaichi"], top: false
     },
     {
-        id: "tekken6",
+        id: "tekken6", platform: "psp",
         name: "Tekken 6",
-        img: "https://upload.wikimedia.org/wikipedia/en/6/6f/Tekken_6_cover.jpg",
+        img: "https://i.ibb.co/KxdM7GNH/tekken6.jpg",
         link: "https://modsfire.com/3B5a4VrDg8UY3ah",
-        category: "accion",
-        size: "730 MB",
-        region: "🇺🇸 USA",
-        players: "multi",
+        category: "accion", size: "730 MB", region: "🇺🇸 USA", players: "multi",
         config: "• Pruebas alfa: Ignorar<br>• Corre fluido a 60 FPS estables.",
-        tags: ["tekken", "fighting", "6", "peleas", "teken", "tequend", "teken6"],
-        top: false
+        tags: ["tekken", "fighting", "6", "peleas"], top: false
     },
     {
-        id: "nfs_mw",
+        id: "nfs_mw", platform: "psp",
         name: "NFS Most Wanted",
-        img: "https://upload.wikimedia.org/wikipedia/en/3/3e/NFSMWPSP.jpg",
+        img: "https://i.ibb.co/GvXZQHDt/nfs-mw.jpg",
         link: "https://modsfire.com/download/7reX73IfKx6hj8U/eb2c5",
-        category: "carreras",
-        size: "170 MB",
-        region: "🇺🇸 USA",
-        players: "multi",
+        category: "carreras", size: "170 MB", region: "🇺🇸 USA", players: "multi",
         config: "• Desactivar efectos lentos: Activado",
-        tags: ["need", "for", "speed", "nfs", "most", "wanted", "carros", "carreras", "nid for spid", "mos guanted"],
-        top: false
+        tags: ["need", "for", "speed", "nfs", "most", "wanted"], top: false
     },
     {
-        id: "burnout_leg",
+        id: "burnout_leg", platform: "psp",
         name: "Burnout Legends",
-        img: "https://upload.wikimedia.org/wikipedia/en/5/5a/Burnout_Legends.jpg",
+        img: "https://i.ibb.co/zTn9ccxM/burnout-leg.jpg",
         link: "https://modsfire.com/download/NGbdbMF1d2AM21P/16ed1",
-        category: "carreras",
-        size: "250 MB",
-        region: "🇺🇸 USA",
-        players: "multi",
+        category: "carreras", size: "250 MB", region: "🇺🇸 USA", players: "multi",
         config: "• Hilos por software: Activado",
-        tags: ["burnout", "racing", "legends", "carros", "bornout", "choques"],
-        top: false
+        tags: ["burnout", "racing", "legends"], top: false
     }
 ];
 
+let plataformaActual = "psp";
 let categoriaActual = "todos";
 let favoritosList = JSON.parse(localStorage.getItem("vortex_favs")) || [];
+let audioHabilitado = true;
+let audioCtx = null;
 
-document.addEventListener("DOMContentLoaded", () => {
+function playSoundFX(type) {
+    if (!audioHabilitado) return;
+    try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+
+        if (type === 'click') {
+            osc.type = 'square'; osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+        } else if (type === 'success') {
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(550, audioCtx.currentTime + 0.08);
+            osc.frequency.setValueAtTime(850, audioCtx.currentTime + 0.16);
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'select') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+    } catch(e) {}
+}
+
+function toggleAudioMode() {
+    audioHabilitado = !audioHabilitado;
+    document.getElementById("audio-btn").innerText = audioHabilitado ? "🔊 SONIDO ON" : "🔇 MUTED";
+    if(audioHabilitado) playSoundFX('click');
+}
+
+function inicializarPortal(plataforma) {
+    plataformaActual = plataforma;
+    playSoundFX('success');
+
+    document.getElementById("splash-gate").classList.add("hidden");
+    document.getElementById("main-content").classList.add("visible");
+
+    const logo = document.getElementById("vortex-logo");
+    const title = document.getElementById("main-title");
+    const warning = document.getElementById("platform-warning");
+    const optDefault = document.getElementById("opt-default");
+
+    if (plataforma === 'apk') {
+        document.body.classList.add("theme-apk");
+        logo.innerText = "⚡ VORTEX APK";
+        title.innerText = "🤖 VORTEX APK 🤖";
+        warning.innerText = "⚠️ Instala los APK permitiendo fuentes desconocidas en tu celular";
+        optDefault.innerText = "🌐 VORTEX MATRIX VERDE";
+        inyectarCategoriasAPK();
+    } else {
+        document.body.classList.remove("theme-apk");
+        logo.innerText = "⚡ VORTEX PSP";
+        title.innerText = "🎮 VORTEX PSP 🎮";
+        warning.innerText = "⚠️ Usa ZArchiver para extraer archivos .zip o .7z";
+        optDefault.innerText = "🌐 VORTEX CYAN";
+        inyectarCategoriasPSP();
+    }
+
+    categoriaActual = "todos";
     ejecutarFiltroGlobal();
     renderizarTop();
-    window.addEventListener("scroll", () => {
-        document.getElementById("btn-top").style.display = window.scrollY > 400 ? "flex" : "none";
-    });
-});
+    verificarLogroNocturno();
+}
+
+function inyectarCategoriasPSP() {
+    document.getElementById("categories-tabs").innerHTML = `
+        <button class="tab active" onclick="filtrarCategoria('todos', this)">TODOS</button>
+        <button class="tab" onclick="filtrarCategoria('accion', this)">💥 ACCIÓN</button>
+        <button class="tab" onclick="filtrarCategoria('carreras', this)">🏎️ CARRERAS</button>
+        <button class="tab" onclick="filtrarCategoria('mundo-abierto', this)">🏙️ MUNDO</button>
+        <button class="tab tab-fav" onclick="filtrarCategoria('favoritos', this)">♥ FAVS</button>
+    `;
+}
+
+function inyectarCategoriasAPK() {
+    document.getElementById("categories-tabs").innerHTML = `
+        <button class="tab active" onclick="filtrarCategoria('todos', this)">TODOS</button>
+        <button class="tab tab-fav" onclick="filtrarCategoria('favoritos', this)">♥ FAVS</button>
+    `;
+}
 
 function cambiarTema(tema) {
+    playSoundFX('click');
     document.body.className = "";
-    if (tema !== "default") {
+    if (plataformaActual === 'apk' && tema === 'default') {
+        document.body.classList.add("theme-apk");
+    } else if (tema !== "default") {
         document.body.classList.add(tema);
     }
 }
@@ -707,8 +642,20 @@ function cambiarTema(tema) {
 function renderizarJuegos(lista) {
     const contenedor = document.getElementById("juegos");
     const noResultsMsg = document.getElementById("no-results");
+    
     contenedor.innerHTML = "";
     contenedor.appendChild(noResultsMsg);
+
+    if (plataformaActual === "apk" && lista.length === 0) {
+        document.getElementById("game-counter").innerText = `VORTEX APK v1.0`;
+        noResultsMsg.style.display = "none";
+        
+        let emptyDiv = document.createElement("div");
+        emptyDiv.className = "empty-state";
+        emptyDiv.innerHTML = `⚙️ AREA EN MANTENIMIENTO ⚙️<br><br>Estamos preparando una selección pesada de los mejores ports de Android, juegos premium liberados y emuladores optimizados.<br><br>¡Vuelve pronto, mi pez! 🚀`;
+        contenedor.appendChild(emptyDiv);
+        return;
+    }
 
     document.getElementById("game-counter").innerText = `JUEGOS DISPONIBLES: ${lista.length}`;
 
@@ -723,20 +670,21 @@ function renderizarJuegos(lista) {
         const gameDiv = document.createElement("div");
         gameDiv.className = "game";
         gameDiv.id = `card-${juego.id}`;
-
         gameDiv.innerHTML = `
             <div class="game-meta">
                 <span class="badge-spec">💾 ${juego.size}</span>
                 <span class="badge-spec">${playerBadge}</span>
                 <span class="badge-spec">${juego.region}</span>
             </div>
-            <img src="${juego.img}" alt="${juego.name}" loading="lazy">
+            <div class="game-img-container">
+                <img src="${juego.img}" alt="${juego.name}" loading="lazy">
+            </div>
             <h3>${juego.name}</h3>
             
             <div class="game-actions">
                 <button class="btn-fav ${isFav}" onclick="toggleFavorito('${juego.id}', this)">${heartIcon}</button>
                 <button class="btn-info" onclick="toggleConfigPanel('${juego.id}', true)">ⓘ</button>
-                <a href="${juego.link}" target="_blank" style="flex-grow: 1;">
+                <a href="${juego.link}" target="_blank" style="flex-grow: 1;" onclick="registrarDescarga('${juego.id}')">
                     <button class="btn-download">Descargar</button>
                 </a>
             </div>
@@ -752,6 +700,7 @@ function renderizarJuegos(lista) {
 }
 
 function toggleFavorito(id, boton) {
+    playSoundFX('click');
     if (favoritosList.includes(id)) {
         favoritosList = favoritosList.filter(favId => favId !== id);
         boton.classList.remove("is-fav"); boton.innerText = "♡";
@@ -764,13 +713,16 @@ function toggleFavorito(id, boton) {
 }
 
 function toggleConfigPanel(id, abrir) {
+    playSoundFX('click');
     document.getElementById(`config-${id}`).classList.toggle("open", abrir);
 }
 
 function seleccionarJuegoAleatorio() {
+    playSoundFX('select');
     let input = document.getElementById("search").value.toLowerCase().trim();
     let pool = juegosData.filter(juego => {
-        let coincideCat = (categoriaActual === "todos" || (categoriaActual === "favoritos" && favoritosList.includes(juego.id)) || (categoriaActual === "multiplayer" && juego.players === "multi") || juego.category === categoriaActual);
+        if(juego.platform !== plataformaActual) return false;
+        let coincideCat = (categoriaActual === "todos" || (categoriaActual === "favoritos" && favoritosList.includes(juego.id)) || juego.category === categoriaActual);
         let coincideTxt = exactAndFuzzyMatch(juego, input);
         return coincideCat && coincideTxt;
     });
@@ -786,6 +738,7 @@ function seleccionarJuegoAleatorio() {
 }
 
 function filtrarCategoria(cat, elemento) {
+    playSoundFX('click');
     categoriaActual = cat;
     document.querySelectorAll(".categories .tab").forEach(tab => tab.classList.remove("active"));
     elemento.classList.add("active");
@@ -793,44 +746,25 @@ function filtrarCategoria(cat, elemento) {
     ejecutarFiltroGlobal();
 }
 
+/* LÓGICA DE BÚSQUEDA MULTI-NOMBRE INTEGRAL */
 function exactAndFuzzyMatch(juego, stringBusqueda) {
     if (stringBusqueda === "") return true;
-    
     let nombreLower = juego.name.toLowerCase();
     if (nombreLower.includes(stringBusqueda)) return true;
-    if (juego.tags.some(tag => tag.includes(stringBusqueda) || stringBusqueda.includes(tag))) return true;
+    if (juego.tags.some(tag => tag.includes(stringBusqueda))) return true;
     
     let terminos = stringBusqueda.split(/\s+/);
-    let cumpleTerminos = terminos.every(termino => {
-        return nombreLower.includes(termino) || juego.tags.some(t => t.includes(termino));
-    });
-    
-    if (cumpleTerminos) return true;
-    
-    return juego.tags.some(tag => {
-        if (Math.abs(tag.length - stringBusqueda.length) > 3) return false;
-        let errores = 0;
-        let i = 0, j = 0;
-        while (i < tag.length && j < stringBusqueda.length) {
-            if (tag[i] !== stringBusqueda[j]) {
-                errores++;
-                if (tag.length > stringBusqueda.length) i++;
-                else if (tag.length < stringBusqueda.length) j++;
-                else { i++; j++; }
-            } else { i++; j++; }
-            if (errores > 2) return false;
-        }
-        return true;
-    });
+    return terminos.every(termino => nombreLower.includes(termino) || juego.tags.some(t => t.includes(termino)));
 }
 
 function ejecutarFiltroGlobal() {
     let input = document.getElementById("search").value.toLowerCase().trim();
     let filtrados = juegosData.filter(juego => {
+        if (juego.platform !== plataformaActual) return false;
+
         let coincideCat = false;
         if(categoriaActual === "todos") coincideCat = true;
         else if(categoriaActual === "favoritos") coincideCat = favoritosList.includes(juego.id);
-        else if(categoriaActual === "multiplayer") coincideCat = (juego.players === "multi");
         else coincideCat = (juego.category === categoriaActual);
         
         let coincideTxt = exactAndFuzzyMatch(juego, input);
@@ -846,7 +780,7 @@ function mostrarSugerencias() {
     let box = document.getElementById("suggestions");
     box.innerHTML = ""; if (input === "") return;
 
-    let resultados = juegosData.filter(juego => exactAndFuzzyMatch(juego, input));
+    let resultados = juegosData.filter(juego => juego.platform === plataformaActual && exactAndFuzzyMatch(juego, input));
     resultados.slice(0, 5).forEach(juego => {
         let div = document.createElement("div"); div.innerText = juego.name;
         div.onclick = () => { document.getElementById("search").value = juego.name; box.innerHTML = ""; ejecutarFiltroGlobal(); };
@@ -854,47 +788,38 @@ function mostrarSugerencias() {
     });
 }
 
-/* SISTEMA NATIVO DE BÚSQUEDA POR VOZ */
 function activarVoz() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-        alert("Tu entorno de desarrollo local o navegador actual no permite la API de voz. Recuerda que para producción requiere conexión segura (HTTPS).");
-        return;
-    }
-
+    if (!SpeechRecognition) return;
     const recognition = new SpeechRecognition();
     recognition.lang = 'es-CO';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
     const micBtn = document.getElementById("mic-btn");
     micBtn.classList.add("recording");
-
+    playSoundFX('select');
     recognition.start();
 
     recognition.onresult = (event) => {
         let resultadoVoz = event.results[0][0].transcript;
-        if(resultadoVoz.endsWith('.')) {
-            resultadoVoz = resultadoVoz.slice(0, -1);
-        }
+        if(resultadoVoz.endsWith('.')) resultadoVoz = resultadoVoz.slice(0, -1);
         document.getElementById("search").value = resultadoVoz;
         ejecutarFiltroGlobal();
     };
-
-    recognition.onspeechend = () => {
-        recognition.stop();
-        micBtn.classList.remove("recording");
-    };
-
-    recognition.onerror = (event) => {
-        alert("Falta de permisos o error de micrófono. Verifica que no hayas bloqueado el acceso en el navegador.");
-        micBtn.classList.remove("recording");
-    };
+    recognition.onspeechend = () => { recognition.stop(); micBtn.classList.remove("recording"); };
+    recognition.onerror = () => { micBtn.classList.remove("recording"); };
 }
 
 function renderizarTop() {
     const topList = document.getElementById("top-list");
-    const destacados = juegosData.filter(j => j.top).sort((a,b)=>a.rank.localeCompare(b.rank));
+    const topHeader = document.getElementById("top-title-header");
+    
+    if (plataformaActual === "apk") {
+        topHeader.innerText = "⭐ TOP APK RECOMENDADOS";
+        topList.innerHTML = `<div style="font-size:9px; color:#888; padding:10px;">El ranking se actualizará al subir contenido.</div>`;
+        return;
+    }
+
+    topHeader.innerText = "⭐ TOP 3 MÁS DESCARGADOS";
+    const destacados = juegosData.filter(j => j.platform === "psp" && j.top).sort((a,b)=>a.rank.localeCompare(b.rank));
     topList.innerHTML = "";
     destacados.forEach(juego => {
         const item = document.createElement("div"); item.className = "top-item";
@@ -903,8 +828,45 @@ function renderizarTop() {
     });
 }
 
-document.addEventListener("click", (e) => { if (e.target.id !== "search") document.getElementById("suggestions").innerHTML = ""; });
+function lanzarNotificacionLogro(texto) {
+    let popup = document.getElementById("achievement-popup");
+    popup.innerText = `🏆 LOGRO DESBLOQUEADO: ${texto}`;
+    popup.classList.add("show");
+    playSoundFX('success');
+    setTimeout(() => { popup.classList.remove("show"); }, 4000);
+}
 
+function registrarDescarga(id) {
+    playSoundFX('success');
+    let descargas = JSON.parse(localStorage.getItem("vortex_dl_count")) || {};
+    descargas[id] = true;
+    localStorage.setItem("vortex_dl_count", JSON.stringify(descargas));
+
+    if (descargas["gow_chains"] && descargas["gow_ghost"] && !localStorage.getItem("badge_kratos")) {
+        localStorage.setItem("badge_kratos", true);
+        setTimeout(() => { lanzarNotificacionLogro("¡Cazador de Dioses Espartanos! ⚔️"); }, 2000);
+    }
+}
+
+function verificarLogroNocturno() {
+    let hora = new Date().getHours();
+    if ((hora >= 23 || hora <= 4) && !localStorage.getItem("badge_nocturno")) {
+        localStorage.setItem("badge_nocturno", true);
+        setTimeout(() => { lanzarNotificacionLogro("Gamer Nocturno de VORTEX 🦉"); }, 1500);
+    }
+}
+
+/* ===== ENVENTO WINDOW SCROLL UNIFICADO (BOTÓN VOLVER ARRIBA) ===== */
+window.onscroll = function() {
+    const btnTop = document.getElementById("btn-top");
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btnTop.style.display = "flex";
+    } else {
+        btnTop.style.display = "none";
+    }
+};
+
+document.addEventListener("click", (e) => { if (e.target.id !== "search") document.getElementById("suggestions").innerHTML = ""; });
 </script>
 </body>
 </html>
